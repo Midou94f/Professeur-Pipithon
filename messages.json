@@ -1,0 +1,36 @@
+{
+  "level_up": {
+    "1": "🐣 Tu as éclos, petit Débutant de l’œuf. Le voyage commence !",
+    "5": "🐍 Bien joué ! Tu es maintenant un Apprenti Python. Attention à ne pas te mordre la queue.",
+    "10": "🔥 Tu as dompté les boucles ! Te voilà un Initié des Boucles.",
+    "20": "🧙‍♂️ Les conditions n'ont plus de secret pour toi, Magicien du If.",
+    "30": "🤖 Impressionnant ! Tu es désormais Maître des Fonctions.",
+    "40": "🧠 Tu raisonnes comme un vrai Architecte du Code.",
+    "50": "🐉 Bienvenue au cercle des Gardiens des Structures. Peu arrivent jusqu’ici.",
+    "60": "✨ Tu transmutes les données comme un Alchimiste des Données.",
+    "70": "🧬 Machine Learning ? Tu es un vrai Tisseur de Connaissances.",
+    "80": "🛸 Tu explores les confins de l’intelligence. Cosmonaute de l’IA confirmé.",
+    "90": "📜 Tu écris les légendes de Pipithon… Prophète reconnu.",
+    "99": "🧑‍🚀 Tu es désormais une Légende Intergalactique. Le multivers t’observe en silence..."
+  },
+  "succes_qcm": [
+    "✅ Bravo ! Bonne réponse, tu fais honneur à ta lignée !",
+    "🌟 Exactement ! Tu es vif comme un renard en Python.",
+    "📚 Bien vu ! La connaissance t’aime bien, on dirait."
+  ],
+  "erreur_qcm": [
+    "❌ Mauvaise réponse. Même les meilleurs trébuchent.",
+    "🤔 Non, ce n’est pas ça. Relis un peu le cours.",
+    "📉 Perdu… mais chaque erreur est une graine de sagesse."
+  ],
+  "appel_cours": [
+    "👨‍🏫 Le Professeur Pipithon arrive… Prépare ton esprit !",
+    "📘 Voici le cours demandé. Ouvre ton cœur (et ton cerveau).",
+    "🎓 Lecture en cours… Respire profondément, on commence."
+  ],
+  "appel_defi": [
+    "🎯 Nouveau défi ! Montre-moi ce que tu sais faire.",
+    "⚔️ Le prochain niveau n’attend que toi.",
+    "🧩 Résous-moi ça, champion !"
+  ]
+}

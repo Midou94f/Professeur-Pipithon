@@ -1,0 +1,28 @@
+{
+  "1124060528868860015": {
+    "id": "1124060528868860015",
+    "name": "mehdifehri",
+    "xp": 18,
+    "level": 1,
+    "defis_reussis": [],
+    "defis_rates": [
+      20,
+      16,
+      7
+    ],
+    "derniere_activite": "2025-04-23T11:16:59.998239",
+    "dernier_defi": 7
+  },
+  "410776845596885022": {
+    "id": "410776845596885022",
+    "name": "schneider.hugo",
+    "xp": 6,
+    "level": 1,
+    "defis_reussis": [],
+    "defis_rates": [
+      4
+    ],
+    "derniere_activite": "2025-04-23T11:21:00.179765",
+    "dernier_defi": 4
+  }
+}

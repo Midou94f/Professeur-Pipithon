@@ -1,0 +1,498 @@
+[
+  {
+    "id": 1,
+    "categorie": "motivation",
+    "texte": "Même une tortue arrive au bout du désert si elle marche chaque jour un peu."
+  },
+  {
+    "id": 2,
+    "categorie": "humour",
+    "texte": "Un jour sans coder, c’est comme du couscous sans semoule… ça n’existe pas."
+  },
+  {
+    "id": 3,
+    "categorie": "échec",
+    "texte": "Celui qui n’échoue jamais n’a sûrement jamais essayé de faire un vrai couscous tout seul."
+  },
+  {
+    "id": 4,
+    "categorie": "curiosité",
+    "texte": "La question idiote est celle que tu n’as pas osé poser."
+  },
+  {
+    "id": 5,
+    "categorie": "erreur",
+    "texte": "C’est en se trompant qu’on apprend à ne plus confondre l’harissa et la confiture."
+  },
+  {
+    "id": 6,
+    "categorie": "patience",
+    "texte": "Le palmier ne pousse pas plus vite parce que tu le regardes fixement."
+  },
+  {
+    "id": 7,
+    "categorie": "humilité",
+    "texte": "Même le plus grand des maîtres continue de balayer devant sa porte."
+  },
+  {
+    "id": 8,
+    "categorie": "discipline",
+    "texte": "La discipline, c’est l’art de continuer à étudier même quand le couscous t’appelle."
+  },
+  {
+    "id": 9,
+    "categorie": "confiance",
+    "texte": "Fais confiance à ton code, mais vérifie toujours deux fois les parenthèses."
+  },
+  {
+    "id": 10,
+    "categorie": "philosophie",
+    "texte": "L’univers est peut-être infini, mais ton attention, elle, a besoin d’un thé à la menthe pour durer."
+  },
+  {
+    "id": 11,
+    "categorie": "motivation",
+    "texte": "Chaque ligne de code écrite est une brique posée vers ton palais intérieur."
+  },
+  {
+    "id": 12,
+    "categorie": "humour",
+    "texte": "Quand ton script plante, respire… même les dattes ont besoin de sécher avant d’être douces."
+  },
+  {
+    "id": 13,
+    "categorie": "échec",
+    "texte": "Ce n’est pas l’erreur qui te définit, mais ce que tu fais après le bug."
+  },
+  {
+    "id": 14,
+    "categorie": "curiosité",
+    "texte": "Un bon élève pose plus de questions qu’un mauvais professeur n’en supporte."
+  },
+  {
+    "id": 15,
+    "categorie": "erreur",
+    "texte": "Il faut parfois une erreur bien chaude pour forger une sagesse bien tendre."
+  },
+  {
+    "id": 16,
+    "categorie": "patience",
+    "texte": "Coder, c’est comme faire un bon tajine : il faut du temps et un peu d’âme."
+  },
+  {
+    "id": 17,
+    "categorie": "humilité",
+    "texte": "Si tu crois tout savoir, va expliquer l’amour à un chat."
+  },
+  {
+    "id": 18,
+    "categorie": "discipline",
+    "texte": "Le savoir vient à ceux qui s’assoient chaque jour, même quand le monde fait du bruit."
+  },
+  {
+    "id": 19,
+    "categorie": "confiance",
+    "texte": "Ta lumière ne s’éteint pas parce qu’un autre brille."
+  },
+  {
+    "id": 20,
+    "categorie": "philosophie",
+    "texte": "Cherche la vérité comme on cherche de l’eau dans le désert : avec foi et courage."
+  },
+  {
+    "id": 21,
+    "categorie": "motivation",
+    "texte": "Commence petit, mais commence. Même l’oasis commence par une goutte."
+  },
+  {
+    "id": 22,
+    "categorie": "humour",
+    "texte": "Un bug, c’est juste Dieu qui teste ton niveau de zen."
+  },
+  {
+    "id": 23,
+    "categorie": "échec",
+    "texte": "Rater un défi, c’est comme rater un couscous : tu as juste appris ce qu’il ne faut plus faire."
+  },
+  {
+    "id": 24,
+    "categorie": "curiosité",
+    "texte": "Celui qui observe une fourmi peut comprendre une armée."
+  },
+  {
+    "id": 25,
+    "categorie": "erreur",
+    "texte": "Quand tu t’es trompé, remercie. Tu viens de payer une leçon précieuse."
+  },
+  {
+    "id": 26,
+    "categorie": "patience",
+    "texte": "Un bon codeur attend que son idée mijote comme un bon ragoût."
+  },
+  {
+    "id": 27,
+    "categorie": "humilité",
+    "texte": "Celui qui croit avoir tout compris n’a pas encore lu entre les lignes."
+  },
+  {
+    "id": 28,
+    "categorie": "discipline",
+    "texte": "Un esprit libre se forge dans l’ordre, pas dans la paresse."
+  },
+  {
+    "id": 29,
+    "categorie": "confiance",
+    "texte": "Tu n’as pas besoin d’être sûr. Tu as besoin d’avancer, même en doutant."
+  },
+  {
+    "id": 30,
+    "categorie": "philosophie",
+    "texte": "Le vrai savoir ne s’écrit pas toujours en Python."
+  },
+  {
+    "id": 31,
+    "categorie": "motivation",
+    "texte": "Chaque jour où tu ouvres ton IDE est un jour où tu refuses d’abandonner."
+  },
+  {
+    "id": 32,
+    "categorie": "humour",
+    "texte": "Quand tout plante, offre-toi un thé à la menthe et accuse Mercure rétrograde."
+  },
+  {
+    "id": 33,
+    "categorie": "échec",
+    "texte": "C’est en tombant qu’on apprend à atterrir avec grâce."
+  },
+  {
+    "id": 34,
+    "categorie": "curiosité",
+    "texte": "Pose-toi mille questions. Mais écoute le silence entre les réponses."
+  },
+  {
+    "id": 35,
+    "categorie": "erreur",
+    "texte": "Tu as planté ? Félicitations. Maintenant, cultive."
+  },
+  {
+    "id": 36,
+    "categorie": "patience",
+    "texte": "Si tu veux comprendre les étoiles, commence par écouter le vent."
+  },
+  {
+    "id": 37,
+    "categorie": "humilité",
+    "texte": "Le maître véritable est celui qui apprend encore, même devant l’élève."
+  },
+  {
+    "id": 38,
+    "categorie": "discipline",
+    "texte": "Chaque matin où tu choisis l’effort, tu écris une ligne de ton destin."
+  },
+  {
+    "id": 39,
+    "categorie": "confiance",
+    "texte": "Le doute est un bon compagnon tant qu’il ne tient pas les rênes."
+  },
+  {
+    "id": 40,
+    "categorie": "philosophie",
+    "texte": "Dieu a codé l’univers en langage vivant. À toi de le décompiler avec le cœur."
+  },
+  {
+    "id": 41,
+    "categorie": "motivation",
+    "texte": "Tu n’as pas besoin d’aller vite. Tu as besoin de ne pas t’arrêter."
+  },
+  {
+    "id": 42,
+    "categorie": "humour",
+    "texte": "Mon fils, si ton code marche du premier coup… méfie-toi, il cache sûrement quelque chose."
+  },
+  {
+    "id": 43,
+    "categorie": "échec",
+    "texte": "Ne crains pas la chute, crains de ne rien apprendre en tombant."
+  },
+  {
+    "id": 44,
+    "categorie": "curiosité",
+    "texte": "Ceux qui posent des questions gênantes construisent des mondes nouveaux."
+  },
+  {
+    "id": 45,
+    "categorie": "erreur",
+    "texte": "Une erreur, c’est comme du sel : juste assez éveille le goût, trop t’empoisonne."
+  },
+  {
+    "id": 46,
+    "categorie": "patience",
+    "texte": "Même la plus lente des tortues arrive au bout du désert si elle garde sa direction."
+  },
+  {
+    "id": 47,
+    "categorie": "humilité",
+    "texte": "Quand tu crois que tu es le plus sage, écoute ton silence… et recommence à apprendre."
+  },
+  {
+    "id": 48,
+    "categorie": "discipline",
+    "texte": "Chaque jour où tu répètes le geste juste, tu affûtes ton âme comme une lame."
+  },
+  {
+    "id": 49,
+    "categorie": "confiance",
+    "texte": "Marche même si tu ne vois que deux pas. La route t’apparaîtra après."
+  },
+  {
+    "id": 50,
+    "categorie": "philosophie",
+    "texte": "La vérité ne se crie pas. Elle se tient droite dans le silence."
+  },
+  {
+    "id": 51,
+    "categorie": "motivation",
+    "texte": "Le chemin le plus court vers le sommet, c’est de ne jamais faire demi-tour."
+  },
+  {
+    "id": 52,
+    "categorie": "humour",
+    "texte": "Dieu a créé les bugs pour que tu n’oublies pas que tu n’es pas encore Dieu."
+  },
+  {
+    "id": 53,
+    "categorie": "échec",
+    "texte": "Tu n’as pas échoué. Tu as juste collecté une expérience très coûteuse."
+  },
+  {
+    "id": 54,
+    "categorie": "curiosité",
+    "texte": "Le savant pose plus de questions qu’il n’apporte de réponses. Et c’est très bien comme ça."
+  },
+  {
+    "id": 55,
+    "categorie": "erreur",
+    "texte": "Quand ton cœur s’arrête sur une faute, c’est qu’il a senti l’appel du vrai."
+  },
+  {
+    "id": 56,
+    "categorie": "patience",
+    "texte": "Ne tire pas sur la fleur pour qu’elle pousse plus vite. Sois le soleil, pas la tempête."
+  },
+  {
+    "id": 57,
+    "categorie": "humilité",
+    "texte": "Un roi sans humilité est un tyran. Un élève sans humilité ne grandira pas."
+  },
+  {
+    "id": 58,
+    "categorie": "discipline",
+    "texte": "Répète. Récite. Respire. La maîtrise naît du rythme, pas du miracle."
+  },
+  {
+    "id": 59,
+    "categorie": "confiance",
+    "texte": "Même si tout semble flou, avance. C’est ton pas qui dessinera le chemin."
+  },
+  {
+    "id": 60,
+    "categorie": "philosophie",
+    "texte": "Le mystère ne se résout pas. Il se contemple jusqu’à devenir lumière."
+  },
+  {
+    "id": 61,
+    "categorie": "motivation",
+    "texte": "Commence petit, mais commence vrai. C’est le vrai qui devient grand."
+  },
+  {
+    "id": 62,
+    "categorie": "humour",
+    "texte": "Un bug, c’est juste un appel au secours déguisé. Sois gentil, il a peur."
+  },
+  {
+    "id": 63,
+    "categorie": "échec",
+    "texte": "Chaque fois que tu tombes, le sol t’enseigne comment te relever."
+  },
+  {
+    "id": 64,
+    "categorie": "curiosité",
+    "texte": "Celui qui s’étonne encore est plus vivant que celui qui sait tout."
+  },
+  {
+    "id": 65,
+    "categorie": "erreur",
+    "texte": "Si tu ne fais jamais d’erreur, tu n’as jamais touché la frontière du savoir."
+  },
+  {
+    "id": 66,
+    "categorie": "patience",
+    "texte": "Le figuier ne donne pas ses fruits à l’impatient. Il parle la langue du temps."
+  },
+  {
+    "id": 67,
+    "categorie": "humilité",
+    "texte": "Le sage sait qu’il n’est qu’un passant dans le jardin de la connaissance."
+  },
+  {
+    "id": 68,
+    "categorie": "discipline",
+    "texte": "Fais chaque jour un pas. Même petit. Surtout petit."
+  },
+  {
+    "id": 69,
+    "categorie": "confiance",
+    "texte": "Le pont n’existe pas toujours avant ton pas. Il se crée quand tu avances."
+  },
+  {
+    "id": 70,
+    "categorie": "philosophie",
+    "texte": "Cherche le sens, pas le bruit. Le monde parle à celui qui écoute doucement."
+  },
+  {
+    "id": 71,
+    "categorie": "motivation",
+    "texte": "La fatigue n’est pas un mur, c’est un test. Respire. Reprends. Continue."
+  },
+  {
+    "id": 72,
+    "categorie": "humour",
+    "texte": "Il est plus facile de convaincre un chameau de danser que ton ordi de compiler sans erreur."
+  },
+  {
+    "id": 73,
+    "categorie": "échec",
+    "texte": "Ce n’est pas parce que tu ne vois pas de progrès que tu n’en fais pas."
+  },
+  {
+    "id": 74,
+    "categorie": "curiosité",
+    "texte": "Celui qui demande devient source. Celui qui croit savoir devient rocher."
+  },
+  {
+    "id": 75,
+    "categorie": "erreur",
+    "texte": "L’erreur bien regardée devient un miroir. L’erreur ignorée devient un piège."
+  },
+  {
+    "id": 76,
+    "categorie": "patience",
+    "texte": "Le désert n’est pas vide. Il est rempli de leçons pour ceux qui prennent le temps."
+  },
+  {
+    "id": 77,
+    "categorie": "humilité",
+    "texte": "Le vrai savant se penche, pas pour s’incliner, mais pour mieux entendre."
+  },
+  {
+    "id": 78,
+    "categorie": "discipline",
+    "texte": "Celui qui répète un acte juste cent fois construit un palais invisible en lui."
+  },
+  {
+    "id": 79,
+    "categorie": "confiance",
+    "texte": "Quand tu doutes, n’éteins pas la lumière. Écoute ce que le silence veut dire."
+  },
+  {
+    "id": 80,
+    "categorie": "philosophie",
+    "texte": "Les grandes réponses ne sont pas données. Elles sont trouvées en marchant doucement."
+  },
+  {
+    "id": 81,
+    "categorie": "motivation",
+    "texte": "Ne vise pas la perfection. Vise la vérité, elle est déjà parfaite."
+  },
+  {
+    "id": 82,
+    "categorie": "humour",
+    "texte": "Le jour où ton code fonctionne du premier coup, méfie-toi : tu es peut-être en train de rêver."
+  },
+  {
+    "id": 83,
+    "categorie": "échec",
+    "texte": "Le seul vrai échec est de ne pas avoir regardé l’échec en face."
+  },
+  {
+    "id": 84,
+    "categorie": "curiosité",
+    "texte": "La question qui dérange est souvent celle qui libère."
+  },
+  {
+    "id": 85,
+    "categorie": "erreur",
+    "texte": "Les erreurs ne sont pas des fautes. Ce sont des fenêtres que l’orgueil laisse fermées."
+  },
+  {
+    "id": 86,
+    "categorie": "patience",
+    "texte": "Si la vérité tarde, c’est qu’elle veut te rencontrer sans ton impatience."
+  },
+  {
+    "id": 87,
+    "categorie": "humilité",
+    "texte": "Celui qui dit 'je sais' ferme la porte à l’invisible qui voulait entrer."
+  },
+  {
+    "id": 88,
+    "categorie": "discipline",
+    "texte": "L’habitude juste est une clé que le temps polit en silence."
+  },
+  {
+    "id": 89,
+    "categorie": "confiance",
+    "texte": "Le chemin se révèle à celui qui accepte de marcher sans carte."
+  },
+  {
+    "id": 90,
+    "categorie": "philosophie",
+    "texte": "Penser, c’est danser avec l’inconnu sans l’insulter."
+  },
+  {
+    "id": 91,
+    "categorie": "motivation",
+    "texte": "Chaque pas sincère fait reculer l’abîme du doute."
+  },
+  {
+    "id": 92,
+    "categorie": "humour",
+    "texte": "Même un dromadaire aurait besoin d’un debugger pour comprendre ton code à 3h du matin."
+  },
+  {
+    "id": 93,
+    "categorie": "échec",
+    "texte": "L’échec est un professeur qui ne crie pas mais n’oublie jamais."
+  },
+  {
+    "id": 94,
+    "categorie": "curiosité",
+    "texte": "La réponse n’est jamais loin. Mais encore faut-il oser poser la vraie question."
+  },
+  {
+    "id": 95,
+    "categorie": "erreur",
+    "texte": "Corrige ton erreur avec amour, et elle deviendra ton alliée."
+  },
+  {
+    "id": 96,
+    "categorie": "patience",
+    "texte": "Un bon pain prend du temps. Une belle âme aussi."
+  },
+  {
+    "id": 97,
+    "categorie": "humilité",
+    "texte": "Le puits ne se vante pas de sa profondeur. Il donne simplement de l’eau."
+  },
+  {
+    "id": 98,
+    "categorie": "discipline",
+    "texte": "Ton corps peut rêver. Mais ton esprit doit revenir à l’heure."
+  },
+  {
+    "id": 99,
+    "categorie": "confiance",
+    "texte": "Quand tu ne vois plus rien, fais confiance à ce qui en toi n’a jamais menti."
+  }
+]
+  

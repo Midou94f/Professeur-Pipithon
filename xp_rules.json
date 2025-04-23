@@ -1,0 +1,27 @@
+{
+  "defi_reussi": {
+    "base": 20,
+    "bonus_par_niveau": 2
+  },
+  "defi_echoue": {
+    "base": 5,
+    "bonus_par_niveau": 1
+  },
+  "cours_suivi": 10,
+  "qcm_reussi": 15,
+  "qcm_echoue": 5,
+  "retour_apres_absence": 25,
+  "citation_lue": 1,
+  "niveau_atteint": {
+    "bonus": 10
+  },
+  "defi_termine_rapidement": {
+    "bonus": 5
+  },
+  "defi_abandonne": {
+    "malus": -5
+  },
+  "inactivite_longue": {
+    "malus": -10
+  }
+}

@@ -1,0 +1,497 @@
+[
+  {
+    "niveau": 1,
+    "xp": 0,
+    "titre": "🐣 Débutant de l’œuf"
+  },
+  {
+    "niveau": 2,
+    "xp": 25,
+    "titre": "🐣 Débutant de l’œuf"
+  },
+  {
+    "niveau": 3,
+    "xp": 50,
+    "titre": "🐣 Débutant de l’œuf"
+  },
+  {
+    "niveau": 4,
+    "xp": 75,
+    "titre": "🐣 Débutant de l’œuf"
+  },
+  {
+    "niveau": 5,
+    "xp": 100,
+    "titre": "🐍 Apprenti Python"
+  },
+  {
+    "niveau": 6,
+    "xp": 130,
+    "titre": "🐍 Apprenti Python"
+  },
+  {
+    "niveau": 7,
+    "xp": 160,
+    "titre": "🐍 Apprenti Python"
+  },
+  {
+    "niveau": 8,
+    "xp": 190,
+    "titre": "🐍 Apprenti Python"
+  },
+  {
+    "niveau": 9,
+    "xp": 220,
+    "titre": "🐍 Apprenti Python"
+  },
+  {
+    "niveau": 10,
+    "xp": 250,
+    "titre": "🔥 Initié des Boucles"
+  },
+  {
+    "niveau": 11,
+    "xp": 285,
+    "titre": "🔥 Initié des Boucles"
+  },
+  {
+    "niveau": 12,
+    "xp": 320,
+    "titre": "🔥 Initié des Boucles"
+  },
+  {
+    "niveau": 13,
+    "xp": 355,
+    "titre": "🔥 Initié des Boucles"
+  },
+  {
+    "niveau": 14,
+    "xp": 390,
+    "titre": "🔥 Initié des Boucles"
+  },
+  {
+    "niveau": 15,
+    "xp": 425,
+    "titre": "🔥 Initié des Boucles"
+  },
+  {
+    "niveau": 16,
+    "xp": 460,
+    "titre": "🔥 Initié des Boucles"
+  },
+  {
+    "niveau": 17,
+    "xp": 495,
+    "titre": "🔥 Initié des Boucles"
+  },
+  {
+    "niveau": 18,
+    "xp": 530,
+    "titre": "🔥 Initié des Boucles"
+  },
+  {
+    "niveau": 19,
+    "xp": 565,
+    "titre": "🔥 Initié des Boucles"
+  },
+  {
+    "niveau": 20,
+    "xp": 600,
+    "titre": "🧙‍♂️ Magicien du If"
+  },
+  {
+    "niveau": 21,
+    "xp": 650,
+    "titre": "🧙‍♂️ Magicien du If"
+  },
+  {
+    "niveau": 22,
+    "xp": 700,
+    "titre": "🧙‍♂️ Magicien du If"
+  },
+  {
+    "niveau": 23,
+    "xp": 750,
+    "titre": "🧙‍♂️ Magicien du If"
+  },
+  {
+    "niveau": 24,
+    "xp": 800,
+    "titre": "🧙‍♂️ Magicien du If"
+  },
+  {
+    "niveau": 25,
+    "xp": 850,
+    "titre": "🧙‍♂️ Magicien du If"
+  },
+  {
+    "niveau": 26,
+    "xp": 900,
+    "titre": "🧙‍♂️ Magicien du If"
+  },
+  {
+    "niveau": 27,
+    "xp": 950,
+    "titre": "🧙‍♂️ Magicien du If"
+  },
+  {
+    "niveau": 28,
+    "xp": 1000,
+    "titre": "🧙‍♂️ Magicien du If"
+  },
+  {
+    "niveau": 29,
+    "xp": 1050,
+    "titre": "🧙‍♂️ Magicien du If"
+  },
+  {
+    "niveau": 30,
+    "xp": 1100,
+    "titre": "🤖 Maître des Fonctions"
+  },
+  {
+    "niveau": 31,
+    "xp": 1170,
+    "titre": "🤖 Maître des Fonctions"
+  },
+  {
+    "niveau": 32,
+    "xp": 1240,
+    "titre": "🤖 Maître des Fonctions"
+  },
+  {
+    "niveau": 33,
+    "xp": 1310,
+    "titre": "🤖 Maître des Fonctions"
+  },
+  {
+    "niveau": 34,
+    "xp": 1380,
+    "titre": "🤖 Maître des Fonctions"
+  },
+  {
+    "niveau": 35,
+    "xp": 1450,
+    "titre": "🤖 Maître des Fonctions"
+  },
+  {
+    "niveau": 36,
+    "xp": 1520,
+    "titre": "🤖 Maître des Fonctions"
+  },
+  {
+    "niveau": 37,
+    "xp": 1590,
+    "titre": "🤖 Maître des Fonctions"
+  },
+  {
+    "niveau": 38,
+    "xp": 1660,
+    "titre": "🤖 Maître des Fonctions"
+  },
+  {
+    "niveau": 39,
+    "xp": 1730,
+    "titre": "🤖 Maître des Fonctions"
+  },
+  {
+    "niveau": 40,
+    "xp": 1800,
+    "titre": "🧠 Architecte du Code"
+  },
+  {
+    "niveau": 41,
+    "xp": 1890,
+    "titre": "🧠 Architecte du Code"
+  },
+  {
+    "niveau": 42,
+    "xp": 1980,
+    "titre": "🧠 Architecte du Code"
+  },
+  {
+    "niveau": 43,
+    "xp": 2070,
+    "titre": "🧠 Architecte du Code"
+  },
+  {
+    "niveau": 44,
+    "xp": 2160,
+    "titre": "🧠 Architecte du Code"
+  },
+  {
+    "niveau": 45,
+    "xp": 2250,
+    "titre": "🧠 Architecte du Code"
+  },
+  {
+    "niveau": 46,
+    "xp": 2340,
+    "titre": "🧠 Architecte du Code"
+  },
+  {
+    "niveau": 47,
+    "xp": 2430,
+    "titre": "🧠 Architecte du Code"
+  },
+  {
+    "niveau": 48,
+    "xp": 2520,
+    "titre": "🧠 Architecte du Code"
+  },
+  {
+    "niveau": 49,
+    "xp": 2610,
+    "titre": "🧠 Architecte du Code"
+  },
+  {
+    "niveau": 50,
+    "xp": 2700,
+    "titre": "🐉 Gardien des Structures"
+  },
+  {
+    "niveau": 51,
+    "xp": 2830,
+    "titre": "🐉 Gardien des Structures"
+  },
+  {
+    "niveau": 52,
+    "xp": 2960,
+    "titre": "🐉 Gardien des Structures"
+  },
+  {
+    "niveau": 53,
+    "xp": 3090,
+    "titre": "🐉 Gardien des Structures"
+  },
+  {
+    "niveau": 54,
+    "xp": 3220,
+    "titre": "🐉 Gardien des Structures"
+  },
+  {
+    "niveau": 55,
+    "xp": 3350,
+    "titre": "🐉 Gardien des Structures"
+  },
+  {
+    "niveau": 56,
+    "xp": 3480,
+    "titre": "🐉 Gardien des Structures"
+  },
+  {
+    "niveau": 57,
+    "xp": 3610,
+    "titre": "🐉 Gardien des Structures"
+  },
+  {
+    "niveau": 58,
+    "xp": 3740,
+    "titre": "🐉 Gardien des Structures"
+  },
+  {
+    "niveau": 59,
+    "xp": 3870,
+    "titre": "🐉 Gardien des Structures"
+  },
+  {
+    "niveau": 60,
+    "xp": 4000,
+    "titre": "✨ Alchimiste des Données"
+  },
+  {
+    "niveau": 61,
+    "xp": 4180,
+    "titre": "✨ Alchimiste des Données"
+  },
+  {
+    "niveau": 62,
+    "xp": 4360,
+    "titre": "✨ Alchimiste des Données"
+  },
+  {
+    "niveau": 63,
+    "xp": 4540,
+    "titre": "✨ Alchimiste des Données"
+  },
+  {
+    "niveau": 64,
+    "xp": 4720,
+    "titre": "✨ Alchimiste des Données"
+  },
+  {
+    "niveau": 65,
+    "xp": 4900,
+    "titre": "✨ Alchimiste des Données"
+  },
+  {
+    "niveau": 66,
+    "xp": 5080,
+    "titre": "✨ Alchimiste des Données"
+  },
+  {
+    "niveau": 67,
+    "xp": 5260,
+    "titre": "✨ Alchimiste des Données"
+  },
+  {
+    "niveau": 68,
+    "xp": 5440,
+    "titre": "✨ Alchimiste des Données"
+  },
+  {
+    "niveau": 69,
+    "xp": 5620,
+    "titre": "✨ Alchimiste des Données"
+  },
+  {
+    "niveau": 70,
+    "xp": 5800,
+    "titre": "🧬 Tisseur de Machine Learning"
+  },
+  {
+    "niveau": 71,
+    "xp": 6040,
+    "titre": "🧬 Tisseur de Machine Learning"
+  },
+  {
+    "niveau": 72,
+    "xp": 6280,
+    "titre": "🧬 Tisseur de Machine Learning"
+  },
+  {
+    "niveau": 73,
+    "xp": 6520,
+    "titre": "🧬 Tisseur de Machine Learning"
+  },
+  {
+    "niveau": 74,
+    "xp": 6760,
+    "titre": "🧬 Tisseur de Machine Learning"
+  },
+  {
+    "niveau": 75,
+    "xp": 7000,
+    "titre": "🧬 Tisseur de Machine Learning"
+  },
+  {
+    "niveau": 76,
+    "xp": 7240,
+    "titre": "🧬 Tisseur de Machine Learning"
+  },
+  {
+    "niveau": 77,
+    "xp": 7480,
+    "titre": "🧬 Tisseur de Machine Learning"
+  },
+  {
+    "niveau": 78,
+    "xp": 7720,
+    "titre": "🧬 Tisseur de Machine Learning"
+  },
+  {
+    "niveau": 79,
+    "xp": 7960,
+    "titre": "🧬 Tisseur de Machine Learning"
+  },
+  {
+    "niveau": 80,
+    "xp": 8200,
+    "titre": "🛸 Cosmonaute de l’IA"
+  },
+  {
+    "niveau": 81,
+    "xp": 8530,
+    "titre": "🛸 Cosmonaute de l’IA"
+  },
+  {
+    "niveau": 82,
+    "xp": 8860,
+    "titre": "🛸 Cosmonaute de l’IA"
+  },
+  {
+    "niveau": 83,
+    "xp": 9190,
+    "titre": "🛸 Cosmonaute de l’IA"
+  },
+  {
+    "niveau": 84,
+    "xp": 9520,
+    "titre": "🛸 Cosmonaute de l’IA"
+  },
+  {
+    "niveau": 85,
+    "xp": 9850,
+    "titre": "🛸 Cosmonaute de l’IA"
+  },
+  {
+    "niveau": 86,
+    "xp": 10180,
+    "titre": "🛸 Cosmonaute de l’IA"
+  },
+  {
+    "niveau": 87,
+    "xp": 10510,
+    "titre": "🛸 Cosmonaute de l’IA"
+  },
+  {
+    "niveau": 88,
+    "xp": 10840,
+    "titre": "🛸 Cosmonaute de l’IA"
+  },
+  {
+    "niveau": 89,
+    "xp": 11170,
+    "titre": "🛸 Cosmonaute de l’IA"
+  },
+  {
+    "niveau": 90,
+    "xp": 11500,
+    "titre": "📜 Prophète de Pipithon"
+  },
+  {
+    "niveau": 91,
+    "xp": 12000,
+    "titre": "📜 Prophète de Pipithon"
+  },
+  {
+    "niveau": 92,
+    "xp": 12500,
+    "titre": "📜 Prophète de Pipithon"
+  },
+  {
+    "niveau": 93,
+    "xp": 13000,
+    "titre": "📜 Prophète de Pipithon"
+  },
+  {
+    "niveau": 94,
+    "xp": 13500,
+    "titre": "📜 Prophète de Pipithon"
+  },
+  {
+    "niveau": 95,
+    "xp": 14000,
+    "titre": "📜 Prophète de Pipithon"
+  },
+  {
+    "niveau": 96,
+    "xp": 14500,
+    "titre": "📜 Prophète de Pipithon"
+  },
+  {
+    "niveau": 97,
+    "xp": 15000,
+    "titre": "📜 Prophète de Pipithon"
+  },
+  {
+    "niveau": 98,
+    "xp": 15500,
+    "titre": "📜 Prophète de Pipithon"
+  },
+  {
+    "niveau": 99,
+    "xp": 16000,
+    "titre": "🧑‍🚀 Légende Intergalactique"
+  }
+]
