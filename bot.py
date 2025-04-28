@@ -1,27 +1,23 @@
-# bot.py — Professeur Pipithon v2 (pimpé)
+# bot.py — Professeur Pipithon v2
 from __future__ import annotations
+import asyncio                    # ← ajoute
 from datetime import datetime, timedelta
 import random
+import json
+
 import discord
 from discord.ext import commands, tasks
 from discord import app_commands, Interaction, ui, ButtonStyle
+from discord.ui import Select, View
 
-from ai import professeur_repond
+from ai import professeur_repond, generer_cours_complet, creer_cours
 from utils import (
-    ensure_user_exists,
-    append_exercise,
-    update_user_xp,
-    check_level_up,
-    get_all_users,
-    get_user_level_info,
-    get_random_citation_by_category,
-    get_user,
-    get_avatars,
-    get_levels,
-    maj_derniere_activite,
-    # Add the new import below
-    track_completed_challenge,
+    ensure_user_exists, append_exercise, update_user_xp, check_level_up,
+    get_all_users, get_user_level_info, get_random_citation_by_category,
+    get_avatars, get_levels, maj_derniere_activite, track_completed_challenge,
+    save_all_users,   # ⇦ déjà ici, inutile de le réimporter plus bas
 )
+
 
 # ───────────────────────────────────────────────
 # Helper visuel : barre de progression XP
@@ -45,37 +41,12 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 # Stocke les ID de message de level-up déjà envoyés pour éviter le spam
 _levelup_cache: set[int] = set()
 
-# ───────────────────────────────────────────────
-# Vue interactive pour la confirmation
-# ───────────────────────────────────────────────
 
-@ui.button(label="✅ J'ai compris", style=ButtonStyle.success)
-async def understood(self, interaction: Interaction, _button: ui.Button):
-        await interaction.response.send_message(
-            "✨ Super ! Quand tu veux une nouvelle question, tape simplement `/prof`.",
-            ephemeral=True,
-        )
-
-@ui.button(label="🌀 Un autre exemple", style=ButtonStyle.primary)
-async def more(self, interaction: Interaction, _button: ui.Button):
-        await interaction.response.send_message(
-            "Pas de souci ! Reformule ta demande avec `/prof …` et j'illustre autrement.",
-            ephemeral=True,
-        )
 
 # ───────────────────────────────────────────────
 # Événements de base
 # ───────────────────────────────────────────────
-@bot.event
-async def on_ready():
-    try:
-        synced = await bot.tree.sync()
-        print(f"✅ Slash-commands synchronisées ({len(synced)})")
-    except Exception as e:
-        print("Sync error :", e)
-    print(f"Professeur Pipithon est prêt – connecté en tant que {bot.user}")
-    leaderboard_task.start()
-    inactivity_ping.start()  # <-- ajoute cette ligne
+
 
 
 @bot.event
@@ -126,7 +97,9 @@ async def on_ready():
     except Exception as e:
         print("Sync error :", e)
     print(f"Professeur Pipithon est prêt – connecté en tant que {bot.user}")
-    
+    leaderboard_task.start()
+    inactivity_ping.start()  # <-- ajoute cette ligne
+
     # Message de bienvenue global dans tous les serveurs
     for guild in bot.guilds:
         if guild.system_channel:  # Canal d'annonces système du serveur
@@ -150,8 +123,6 @@ async def on_ready():
             except:
                 pass  # En cas d'erreur de permission
                 
-    leaderboard_task.start()
-    inactivity_ping.start()
 
 # ───────────────────────────────────────────────
 # Slash-commandes
@@ -370,8 +341,14 @@ async def inactivity_ping():
     now = datetime.utcnow()
     users = get_all_users()
     for uid, u in users.items():
-        last = datetime.fromisoformat(u.get("derniere_activite", now.isoformat()))
-        if now - last > timedelta(hours=72):
+        raw = u.get("derniere_activite")                # peut être None ou malformé
+    try:
+        last = datetime.fromisoformat(raw) if isinstance(raw, str) else now
+    except ValueError:                              # chaîne invalide
+        last = now
+
+    if now - last > timedelta(hours=72):
+
             user_obj = await bot.fetch_user(int(uid))
             try:
                 await user_obj.send(
@@ -380,9 +357,7 @@ async def inactivity_ping():
             except discord.Forbidden:
                 pass
             u["derniere_activite"] = now.isoformat()
-from utils import save_all_users
 
-save_all_users(users)
 
 
 # ─ Analyse rapide de code collé ─
@@ -435,7 +410,7 @@ async def slash_explain(inter: Interaction, term: str):
     except:
         await inter.followup.send("Rien trouvé.")
 
-import discord
+
 from discord import ui, Interaction, ButtonStyle
 
 class ConfirmView(ui.View):
@@ -456,7 +431,7 @@ class ConfirmView(ui.View):
             ephemeral=True
         )
 
-    @ui.button(label="❌ Bloqué", style=ButtonStyle.danger)
+    @ui.button(label="❌ Je suis bloqué", style=ButtonStyle.danger)
     async def stuck(self, interaction: Interaction, button: ui.Button):
         # Noter que l'utilisateur a échoué le défi
         track_completed_challenge(self.user_id, self.challenge_title, success=False)
@@ -513,6 +488,128 @@ async def slash_creercours(inter: Interaction, sujet: str):
 import json
 with open("config.json") as f:
     config = json.load(f)
+
+@bot.tree.command(name="reset", description="Remet ton profil à zéro (XP, niveau, historique)")
+async def slash_reset(inter: Interaction):
+    users = get_all_users()
+    uid = str(inter.user.id)
+    if uid in users:
+        users[uid].update({
+            "xp": 0,
+            "level": 1,
+            "weekly_xp": 0,
+            "history": {"exercises": [], "courses": [], "qcm": []},
+        })
+        save_all_users(users)
+        await inter.response.send_message("🔄 Ton profil a été réinitialisé.", ephemeral=True)
+    else:
+        await inter.response.send_message("Profil introuvable.", ephemeral=True)
+
+# ───────────────────────────────────────────────
+# Slash-commande /cours  → propose la liste
+# ───────────────────────────────────────────────
+
+import re, json
+from discord.ui import Select, View
+
+@bot.tree.command(name="cours", description="Choisis un chapitre à étudier")
+async def slash_cours(inter: Interaction):
+    user = ensure_user_exists(inter.user.id, inter.user.display_name)
+    lvl  = user["level"]
+
+    # Liste « dynamique » – ici simple mapping pour l’exemple
+    chapitres_par_niv = {
+        1: ["Variables & types", "Opérateurs arithmétiques"],
+        2: ["Conditions if/else", "Boucles for"],
+        3: ["Fonctions simples", "Listes & tuples"],
+        # …
+    }
+    propositions = chapitres_par_niv.get(lvl, ["Sujet libre : demandes-en un !"])
+
+    # Sélecteur Discord
+    select = Select(
+        placeholder="Choisis un chapitre…",
+        options=[discord.SelectOption(label=c) for c in propositions],
+        min_values=1, max_values=1,
+    )
+
+    async def on_select(interaction: Interaction):
+        chapitre = select.values[0]
+        await interaction.response.defer()                    # pensons aux 3 s
+        cours = await generer_cours_complet(chapitre, lvl)
+        if not cours:
+            await interaction.followup.send("Erreur IA.", ephemeral=True)
+            return
+
+        # 🔸 1. Sauvegarde dans cours.json
+        try:
+            with open("cours.json", "r", encoding="utf-8") as f:
+                data = json.load(f) or {}
+        except FileNotFoundError:
+            data = {}
+        data.setdefault("cours", {})[chapitre] = cours        # on écrase pas, on met à jour
+        with open("cours.json", "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+
+        # 🔸 2. Ajout à l’historique utilisateur
+        user["history"]["courses"].append(chapitre)
+        save_all_users(get_all_users())
+
+        # 🔸 3. Envoi du cours
+        embed = discord.Embed(
+            title=f"📘 {cours['title']}",
+            description=cours["description"],
+            color=0x3498DB,
+        )
+        embed.add_field(
+            name=f"🧩 Défi : {cours['challenge']['title']}",
+            value=cours['challenge']['statement'],
+            inline=False,
+        )
+        embed.add_field(
+            name="Solution (clique pour révéler)",
+            value=f"||{cours['challenge']['solution']}||",
+            inline=False,
+        )
+        await interaction.followup.send(embed=embed)
+
+        # 🔸 4. Démarrer le QCM tout de suite
+        await lancer_qcm(interaction.channel, inter.user, cours["qcm"])
+
+    select.callback = on_select
+    view = View()
+    view.add_item(select)
+
+    await inter.response.send_message(
+        "Voici les chapitres que je te recommande :",
+        view=view,
+        ephemeral=True
+    )
+
+# ───────────────────────────────────────────────
+# Petite helper QCM (très simple)
+# ───────────────────────────────────────────────
+async def lancer_qcm(channel, user, qcm_list):
+    for i, q in enumerate(qcm_list, 1):
+        opts = "\n".join(f"{chr(0x1F1E6 + j)}. {o}"
+                         for j, o in enumerate(q["options"]))
+        await channel.send(f"**Q{i}. {q['question']}**\n{opts}")
+
+        def check(msg):
+            return (msg.author == user
+                    and msg.channel == channel
+                    and re.match(r"[a-dA-D]$", msg.content.strip()))
+
+        try:
+            msg = await bot.wait_for("message", timeout=60, check=check)
+            bonne = q["answer"].lower() == msg.content.lower()
+            await channel.send("✅ Correct !" if bonne else f"❌ Mauvaise réponse. ({q['answer']})")
+            if bonne:
+                update_user_xp(user.id, 3)   # mini XP par bonne réponse
+        except asyncio.TimeoutError:
+            await channel.send("⏱️ Temps écoulé pour cette question.")
+
+    await channel.send("📚 QCM terminé ! Tape `/prof` pour continuer.")
 
 bot.run(config["TOKEN"])
 

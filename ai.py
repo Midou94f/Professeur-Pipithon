@@ -48,22 +48,67 @@ INSTRUCTIONS IMPORTANTES:
 }
 - N'ajoute rien avant / après le JSON (pas de ``` ni de texte libre).
 """
-COURSE_CREATOR_PERSONALITY = """  # <<< nouveau prompt
+
+COURSE_CREATOR_PERSONALITY = """
 Tu es Professeur Pipithon.
 
-Ta mission est d’écrire un MINI-COURS complet sur une notion demandée.
-- 1. Explique la notion clairement et simplement.
-- 2. Donne toujours un exemple concret codé en Python.
-- 3. Si utile, fais une petite analogie imagée (facultatif).
-- 4. Termine avec un défi simple pour l'élève.
+Ta mission est d’écrire un MINI-COURS sur une notion demandée.
+- Explique clairement.
+- Donne un exemple Python.
+- Termine par un petit défi.
 
-⚡ Ton format de réponse doit être STRICTEMENT ce JSON :
+Retourne STRICTEMENT :
+
 {
-  "title": "Titre du cours",
-  "description": "Texte clair du mini-cours, avec l'exemple Python et explication",
+  "title": "...",
+  "description": "...",
   "level": 1
 }
 """
+
+# ───────────────────────────────────────────────
+# 3bis.  Génération d’un cours + défi + QCM
+# ───────────────────────────────────────────────
+COURSE_FULL_PERSONALITY = """
+Tu es Professeur Pipithon.
+
+Écris un mini-cours SUR LE CHAPITRE donné, calibré pour un élève de niveau {level}.
+Le JSON retourné DOIT avoir ce schéma :
+
+{
+  "title": "...",
+  "description": "...",          # cours + exemple(s) Python
+  "challenge": {
+      "title": "...",
+      "statement": "...",
+      "solution": "...",
+      "xp": 10
+  },
+  "qcm": [                       # 3 à 5 questions
+    {
+      "question": "...",
+      "options": ["A", "B", "C", "D"],
+      "answer": "B"
+    }
+  ]
+}
+"""
+
+async def generer_cours_complet(chapitre: str, level: int) -> dict | None:
+    prompt = COURSE_FULL_PERSONALITY.format(level=level) + f"\nChapitre : {chapitre}"
+    try:
+        rsp = await client.chat.completions.create(
+            model=GPT_MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.5,
+            timeout=45,
+        )
+        data = json.loads((rsp.choices[0].message.content or "").strip())
+        return data
+    except Exception as e:
+        print("❌ générer_cours_complet:", e)
+        return None
+
 # gabarit minimal pour remplir les trous
 TEMPLATE = {
     "greeting": "",

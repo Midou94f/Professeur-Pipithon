@@ -71,7 +71,7 @@ def create_user(user_id, user_name):
             "courses": [],
             "qcm": []
 },
-        "derniere_activite": None
+        "derniere_activite": datetime.utcnow().isoformat()
         }
         save_all_users(users)
         print(f"[✅] Utilisateur {user_name} créé avec succès.")
@@ -80,12 +80,15 @@ def create_user(user_id, user_name):
 
 def update_user_xp(user_id, xp_gagne):
     users = get_all_users()
-    uid = str(user_id)
-    user = users.get(uid)
+    uid   = str(user_id)
+    user  = users.get(uid)
     if user:
         user["xp"] += xp_gagne
+        # ───── correctif : compteur hebdomadaire ─────
+        user["weekly_xp"] = user.get("weekly_xp", 0) + xp_gagne
         save_all_users(users)
     return user
+
 
 
 def get_levels():
