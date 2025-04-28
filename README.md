@@ -95,13 +95,16 @@ Chaque action est asynchrone pour garantir une réponse rapide, sans bloquer les
 
 ---
 
-## 🛠️ Architecture technique
+## Architecture
 
-- **bot.py** : cœur de l'application, gère les commandes Discord, l'attribution d'XP et la gestion des événements.
-- **ai.py** : utilise OpenAI pour générer dynamiquement des cours, défis et réponses personnalisées.
-- **utils.py** : fonctions de gestion de la persistance JSON, calculs d'XP, montées en niveau et historique des activités.
+| Composant  | Rôle | Détails |
+|------------|------|---------|
+| `bot.py`   | Interface Discord | Commandes, gestion XP, classement, tâches périodiques. |
+| `ai.py`    | Génération IA | Création de cours/QCM personnalisés via OpenAI. |
+| `utils.py` | Persistance JSON | Gestion des utilisateurs, XP, historique et sélection adaptative des défis. |
+| `*.json`   | Base de données | Utilisateurs, niveaux, cours, citations, règles d'XP. |
 
-Toutes les données utilisateurs sont stockées localement dans des fichiers `.json`, assurant la mémoire longue durée et la personnalisation des parcours d'apprentissage.
+Architecture pensée pour être **modulaire, robuste** et **évolutive**.
 
 ---
 
