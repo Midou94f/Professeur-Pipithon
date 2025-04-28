@@ -1,28 +1,190 @@
 {
   "1124060528868860015": {
     "id": "1124060528868860015",
-    "name": "mehdifehri",
-    "xp": 18,
-    "level": 1,
-    "defis_reussis": [],
-    "defis_rates": [
-      20,
-      16,
-      7
-    ],
-    "derniere_activite": "2025-04-23T11:16:59.998239",
-    "dernier_defi": 7
+    "name": "CEO - MF",
+    "xp": 177,
+    "level": 7,
+    "history": {
+      "exercises": [
+        {
+          "title": "Crée ton propre algorithme",
+          "timestamp": "2025-04-28T09:52:44.203348"
+        },
+        {
+          "title": "",
+          "timestamp": "2025-04-28T09:55:24.953206"
+        },
+        {
+          "title": "Défi des variables",
+          "timestamp": "2025-04-28T09:55:57.836795"
+        },
+        {
+          "title": "Crée ton propre algorithme",
+          "timestamp": "2025-04-28T10:09:12.877067"
+        },
+        {
+          "title": "Exercice du jour",
+          "timestamp": "2025-04-28T10:10:13.625248"
+        },
+        {
+          "title": "Exemple supplémentaire",
+          "timestamp": "2025-04-28T10:11:07.043691"
+        },
+        {
+          "title": "Pas d'exercice pour le moment",
+          "timestamp": "2025-04-28T10:12:32.266410"
+        },
+        {
+          "title": "QCM de culture générale",
+          "timestamp": "2025-04-28T10:13:31.144211"
+        },
+        {
+          "title": "Défi de la semaine",
+          "timestamp": "2025-04-28T10:37:05.825021"
+        },
+        {
+          "title": "Introduction à Python",
+          "timestamp": "2025-04-28T10:38:45.226582"
+        },
+        {
+          "title": "Exercice de révision",
+          "timestamp": "2025-04-28T11:04:20.007244"
+        },
+        {
+          "title": "Exercice de révision",
+          "timestamp": "2025-04-28T11:05:13.511365"
+        },
+        {
+          "title": "Exercice de révision",
+          "timestamp": "2025-04-28T11:08:31.929603"
+        },
+        {
+          "title": "Exercice pratique",
+          "timestamp": "2025-04-28T11:08:51.266719"
+        },
+        {
+          "title": "Exercice de boucle",
+          "timestamp": "2025-04-28T11:10:16.396583"
+        },
+        {
+          "title": "Manipulation de données avec Panda",
+          "timestamp": "2025-04-28T11:10:51.665427"
+        }
+      ],
+      "courses": [],
+      "qcm": []
+    },
+    "derniere_activite": "2025-04-28T11:10:48.412526",
+    "completed_challenges": [
+      {
+        "title": "Introduction à Python",
+        "success": null,
+        "timestamp": "2025-04-28T10:38:45.227425",
+        "level_when_completed": 4
+      },
+      {
+        "title": "Exercice de révision",
+        "success": null,
+        "timestamp": "2025-04-28T11:04:20.008163",
+        "level_when_completed": 4
+      },
+      {
+        "title": "Exercice de révision",
+        "success": false,
+        "timestamp": "2025-04-28T11:04:47.250924",
+        "level_when_completed": 5
+      },
+      {
+        "title": "Exercice de révision",
+        "success": null,
+        "timestamp": "2025-04-28T11:05:13.513543",
+        "level_when_completed": 5
+      },
+      {
+        "title": "Exercice de révision",
+        "success": true,
+        "timestamp": "2025-04-28T11:05:30.500965",
+        "level_when_completed": 5
+      },
+      {
+        "title": "Exercice de révision",
+        "success": null,
+        "timestamp": "2025-04-28T11:08:31.931134",
+        "level_when_completed": 5
+      },
+      {
+        "title": "Exercice pratique",
+        "success": null,
+        "timestamp": "2025-04-28T11:08:51.271839",
+        "level_when_completed": 6
+      },
+      {
+        "title": "Exercice de boucle",
+        "success": null,
+        "timestamp": "2025-04-28T11:10:16.399584",
+        "level_when_completed": 6
+      },
+      {
+        "title": "Exercice de boucle",
+        "success": true,
+        "timestamp": "2025-04-28T11:10:36.049461",
+        "level_when_completed": 6
+      },
+      {
+        "title": "Manipulation de données avec Panda",
+        "success": null,
+        "timestamp": "2025-04-28T11:10:51.667136",
+        "level_when_completed": 6
+      }
+    ]
   },
   "410776845596885022": {
     "id": "410776845596885022",
     "name": "schneider.hugo",
-    "xp": 6,
-    "level": 1,
-    "defis_reussis": [],
-    "defis_rates": [
-      4
-    ],
-    "derniere_activite": "2025-04-23T11:21:00.179765",
-    "dernier_defi": 4
+    "xp": 72,
+    "level": 3,
+    "history": {
+      "exercises": [
+        {
+          "title": "Affichage en Python",
+          "timestamp": "2025-04-28T09:54:08.866709"
+        },
+        {
+          "title": "Création de QCM",
+          "timestamp": "2025-04-28T10:12:01.176655"
+        },
+        {
+          "title": "QCM sur les bases de Python",
+          "timestamp": "2025-04-28T10:13:07.081666"
+        },
+        {
+          "title": "Création d'une fiche de cours sur les bases de Python",
+          "timestamp": "2025-04-28T10:13:42.694345"
+        },
+        {
+          "title": "Création d'une fiche de cours sur les bases de Python",
+          "timestamp": "2025-04-28T10:14:31.981743"
+        },
+        {
+          "title": "Création d'un QCM complexe sur Python",
+          "timestamp": "2025-04-28T10:15:24.723215"
+        },
+        {
+          "title": "Affichage en Python",
+          "timestamp": "2025-04-28T10:41:55.657710"
+        }
+      ],
+      "courses": [],
+      "qcm": []
+    },
+    "derniere_activite": "2025-04-28T10:42:36.857864",
+    "completed_challenges": [
+      {
+        "title": "Affichage en Python",
+        "success": null,
+        "timestamp": "2025-04-28T10:41:55.660577",
+        "level_when_completed": 3
+      }
+    ]
   }
 }

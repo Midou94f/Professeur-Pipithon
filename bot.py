@@ -1,240 +1,519 @@
-from datetime import datetime
-
+# bot.py — Professeur Pipithon v2 (pimpé)
+from __future__ import annotations
+from datetime import datetime, timedelta
+import random
 import discord
+from discord.ext import commands, tasks
+from discord import app_commands, Interaction, ui, ButtonStyle
+
 from ai import professeur_repond
-from discord.ext import commands
 from utils import (
-    attribuer_xp,
-    choisir_defi,
-    choisir_qcm,
     ensure_user_exists,
-    format_cours,
-    get_all_defis,
+    append_exercise,
+    update_user_xp,
+    check_level_up,
     get_all_users,
-    get_avatars,
-    get_cours_for_level,
-    get_levels,
+    get_user_level_info,
     get_random_citation_by_category,
     get_user,
-    load_json,
-    log_action,
+    get_avatars,
+    get_levels,
     maj_derniere_activite,
-    save_all_users,
-    save_json,
-    traiter_qcm,
+    # Add the new import below
+    track_completed_challenge,
 )
 
+# ───────────────────────────────────────────────
+# Helper visuel : barre de progression XP
+# ───────────────────────────────────────────────
+def progress_bar(xp: int, next_xp: int, size: int = 12) -> str:
+    pct = min(xp / next_xp, 1)
+    fill = int(pct * size)
+    return "█" * fill + "░" * (size - fill)
+
+def xp_to_next(level: int) -> int:
+    """Renvoie l'XP requis pour atteindre le niveau suivant (simple paliers  +50)."""
+    palette = {1: 25, 2: 50}           # premiers niveaux plus courts
+    return palette.get(level, 50 + 25 * ((level - 3) // 5))
+
+# ───────────────────────────────────────────────
+# Initialisation du bot
+# ───────────────────────────────────────────────
 intents = discord.Intents.all()
 bot = commands.Bot(command_prefix="!", intents=intents)
-bot.qcm_en_cours = {}
-bot.defi_en_cours = {}  # Pour suivre les défis en cours
+
+# Stocke les ID de message de level-up déjà envoyés pour éviter le spam
+_levelup_cache: set[int] = set()
+
+# ───────────────────────────────────────────────
+# Vue interactive pour la confirmation
+# ───────────────────────────────────────────────
+
+@ui.button(label="✅ J'ai compris", style=ButtonStyle.success)
+async def understood(self, interaction: Interaction, _button: ui.Button):
+        await interaction.response.send_message(
+            "✨ Super ! Quand tu veux une nouvelle question, tape simplement `/prof`.",
+            ephemeral=True,
+        )
+
+@ui.button(label="🌀 Un autre exemple", style=ButtonStyle.primary)
+async def more(self, interaction: Interaction, _button: ui.Button):
+        await interaction.response.send_message(
+            "Pas de souci ! Reformule ta demande avec `/prof …` et j'illustre autrement.",
+            ephemeral=True,
+        )
+
+# ───────────────────────────────────────────────
+# Événements de base
+# ───────────────────────────────────────────────
+@bot.event
+async def on_ready():
+    try:
+        synced = await bot.tree.sync()
+        print(f"✅ Slash-commands synchronisées ({len(synced)})")
+    except Exception as e:
+        print("Sync error :", e)
+    print(f"Professeur Pipithon est prêt – connecté en tant que {bot.user}")
+    leaderboard_task.start()
+    inactivity_ping.start()  # <-- ajoute cette ligne
 
 
 @bot.event
-async def on_ready():
-    print(f"✅ Professeur Pipithon est prêt ! Connecté en tant que {bot.user}")
-
+async def on_member_join(member: discord.Member):
+    ensure_user_exists(member.id, member.name)
+    embed = discord.Embed(
+        title="🐍 Bienvenue dans le monde de Python!",
+        description=f"Salut **{member.display_name}** ! Je suis **Professeur Pipithon**, ton mentor personnel.",
+        color=0x00B894
+    )
+    embed.add_field(
+        name="Comment je peux t'aider?",
+        value="• `/prof` - Pose-moi n'importe quelle question sur Python\n"
+              "• `/stats` - Consulte ton niveau actuel et tes XP\n"
+              "• `/classement` - Vois qui progresse le plus cette semaine\n"
+              "• `/citation` - Un peu de sagesse pour te motiver",
+        inline=False
+    )
+    embed.add_field(
+        name="Comment progresser?",
+        value="À chaque question et défi complété, tu gagnes de l'XP et tu montes en niveau! Plus tu apprends, plus les défis seront adaptés à tes compétences.",
+        inline=False
+    )
+    embed.set_footer(text="Que l'aventure commence! Tape /prof pour ta première question.")
+    
+    try:
+        await member.send(embed=embed)
+    except:
+        # Si DM désactivés, envoyer dans le channel de bienvenue
+        if member.guild.system_channel:
+            await member.guild.system_channel.send(f"{member.mention}", embed=embed)
+    ensure_user_exists(member.id, member.name)
+    await member.send(
+        f"Bienvenue {member.display_name} ! Je suis **Professeur Pipithon** 🐍\n"
+        "Tape `/aide` sur le serveur pour découvrir les commandes.\n"
+        "Que l'aventure commence !"
+    )
 
 @bot.event
 async def on_command_error(ctx, error):
-    await ctx.send(f"❌ Une erreur est survenue : `{error}`")
+    await ctx.send(f"❌ Erreur : `{error}`")
 
+@bot.event
+async def on_ready():
+    try:
+        synced = await bot.tree.sync()
+        print(f"✅ Slash-commands synchronisées ({len(synced)})")
+    except Exception as e:
+        print("Sync error :", e)
+    print(f"Professeur Pipithon est prêt – connecté en tant que {bot.user}")
+    
+    # Message de bienvenue global dans tous les serveurs
+    for guild in bot.guilds:
+        if guild.system_channel:  # Canal d'annonces système du serveur
+            embed = discord.Embed(
+                title="🐍 Professeur Pipithon est en ligne!",
+                description="Bonjour à tous! Je suis votre assistant Python personnel.",
+                color=0x00B894
+            )
+            embed.add_field(
+                name="Commandes disponibles:",
+                value="• `/prof` - Pose-moi une question sur Python\n"
+                      "• `/stats` - Consulte ton niveau et tes XP\n"
+                      "• `/classement` - Vois qui progresse le plus\n"
+                      "• `/citation` - Un peu de motivation",
+                inline=False
+            )
+            embed.set_footer(text="Je suis là pour vous aider à progresser en Python!")
+            
+            try:
+                await guild.system_channel.send(embed=embed)
+            except:
+                pass  # En cas d'erreur de permission
+                
+    leaderboard_task.start()
+    inactivity_ping.start()
 
-@bot.command(name="aide")
-async def aide(ctx):
-    maj_derniere_activite(ctx.author.id)
-    await ctx.send(
-        """
-🛠️ **Commandes disponibles** :
-
-📘 `!cours` – Reçois un cours adapté à ton niveau.
-🎯 `!defi` – Lance un défi codé à ton niveau.
-🧠 `!qcm` – Teste tes connaissances par un QCM.
-🎓 `!prof <message>` – Pose une question à l'IA Professeur Pipithon.
-📜 `!citation` – Reçois une citation de sagesse adaptée.
-📈 `!stats` – Consulte ton niveau, XP et progression.
-⏳ `!temps` – Affiche ta dernière activité et détecte une inactivité.
-❓ `!help` – Récapitulatif des commandes.
-"""
+# ───────────────────────────────────────────────
+# Slash-commandes
+# ───────────────────────────────────────────────
+@bot.tree.command(name="aide", description="Affiche la liste des commandes")
+async def slash_aide(inter: Interaction):
+    maj_derniere_activite(inter.user.id)
+    await inter.response.send_message(
+        "**Commandes disponibles :**\n"
+        "• `/prof` – pose une question (cours + défi IA)\n"
+        "• `/stats` – vois ton niveau et tes XP\n"
+        "• `/classement` – top 10 hebdo\n"
+        "• `/citation` – petite sagesse motivante",
+        ephemeral=True,
     )
 
+@bot.tree.command(
+    name="prof",
+    description="Pose une question à Professeur Pipithon",
+)
+@app_commands.describe(question="Ta question, ton bloc de code ou ton sujet")
+async def slash_prof(inter: Interaction, question: str):
+    # 1 ─ accusé de réception
+    await inter.response.defer()
 
-@bot.command(name="prof")
-async def prof(ctx, *, question):
-    user = ensure_user_exists(ctx.author.id, ctx.author.name)
-    maj_derniere_activite(ctx.author.id)
-    await ctx.send("💬 Réflexion du Professeur Pipithon en cours...")
-    reponse = await professeur_repond(ctx.author.id, question)
-    await ctx.send(reponse)
+    # 2 ─ profil
+    user = ensure_user_exists(inter.user.id, inter.user.display_name)
+    maj_derniere_activite(inter.user.id)
+
+    # 3 ─ appel IA
+    data = await professeur_repond(user["id"], question)
+    if not data:
+        await inter.followup.send("❌ Erreur interne : impossible d'obtenir la réponse.")
+        return
+
+    # ───────────────────────────────────────────
+    # 4 ─ déballage sécurisé de la réponse IA
+    # ───────────────────────────────────────────
+    greeting  = data.get("greeting", "Salut aventurier !")
+    answer    = data.get("answer",  "Je n'ai pas pu rédiger l'explication.")
+    resource  = data.get("resource", "")
+    exercise  = data.get("exercise", {}) or {}
+
+    ex_title     = exercise.get("title", "Exercice surprise")
+    ex_statement = exercise.get("statement", "Mets en pratique la notion vue.")
+    ex_solution  = exercise.get("solution", "Solution bientôt disponible.")
+    ex_xp        = exercise.get("xp", 5)
+    confirm      = data.get("confirmation_request", "Dis-moi si c'est clair !")
+
+    # 5 ─ mémorisation + XP
+    append_exercise(user["id"], ex_title)
+    track_completed_challenge(user["id"], ex_title, success=None)  # On n'a pas encore le résultat
+    update_user_xp(user["id"], ex_xp)
+    lvlup_msg = check_level_up(user["id"])
 
 
-@bot.command(name="citation")
-async def citation(ctx):
-    ensure_user_exists(ctx.author.id, ctx.author.name)
-    maj_derniere_activite(ctx.author.id)
-    citation = get_random_citation_by_category("motivation")
-    await ctx.send(citation)
+    # 6 ─ badge (serveur uniquement)
+    if inter.guild:
+        member = inter.guild.get_member(inter.user.id)
+        if member:
+            await give_badge(member, user["xp"])
 
+    # 7 ─ embed principal
+    next_xp = xp_to_next(user["level"])
+    bar     = progress_bar(user["xp"], next_xp)
+    footer  = f"[{bar}] {user['xp']}/{next_xp} XP – Nv {user['level']}"
 
-@bot.command(name="stats")
-async def stats(ctx):
-    user = ensure_user_exists(ctx.author.id, ctx.author.name)
-    maj_derniere_activite(ctx.author.id)
-    level = user.get("level", 1)
-    xp = user.get("xp", 0)
-    defis_reussis = len(user.get("defis_reussis", []))
-    defis_rates = len(user.get("defis_rates", []))
-    titre = next(
-        (lvl["titre"] for lvl in get_levels() if lvl["niveau"] == level), "Inconnu"
+    embed = discord.Embed(description=greeting, color=0x00B894)
+    embed.add_field(name="📖 Explication", value=answer, inline=False)
+    if resource:
+        embed.add_field(name="🔗 Ressource", value=resource, inline=False)
+    embed.add_field(
+        name="🧩 Défi",
+        value=f"**{ex_title}**\n{ex_statement}",
+        inline=False,
     )
+    embed.add_field(name="Solution", value=f"||{ex_solution}||", inline=False)
+    embed.add_field(name="❓", value=confirm, inline=False)
+    embed.set_footer(text=footer)
+
+    await inter.followup.send(embed=embed, view=ConfirmView(challenge_title=ex_title, user_id=user["id"]))
+
+
+    # 8 ─ message de level-up (anti-spam)
+    if lvlup_msg and inter.channel and inter.channel.id not in _levelup_cache:
+        _levelup_cache.add(inter.channel.id)
+        up = discord.Embed(
+            title="🚀 Ascension accomplie !",
+            description=f"**{inter.user.mention} atteint le {lvlup_msg} !**\n"
+                        "Un pas de plus vers la maîtrise du code 🧠💻",
+            color=0xF1C40F,
+        )
+        up.set_image(
+            url=random.choice(
+                [
+                    "https://media.giphy.com/media/3o6ZsWJq0VwJ8Lzxio/giphy.gif",
+                    "https://media.giphy.com/media/3o7abldj0b3rxrZUxW/giphy.gif",
+                    "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
+                    "https://media.giphy.com/media/l0MYC0LajbaPoEADu/giphy.gif",
+                    "https://media.giphy.com/media/l0MYNVDd7Q1bs3Mso/giphy.gif",
+                ]
+            )
+        )
+        await inter.channel.send(embed=up)
+
+
+
+@bot.tree.command(name="stats", description="Voir ton niveau et tes XP")
+async def slash_stats(inter: Interaction):
+    user = ensure_user_exists(inter.user.id, inter.user.display_name)
+    maj_derniere_activite(inter.user.id)
+
+    lvl = user["level"]
+    xp = user["xp"]
+    titre = get_user_level_info(lvl)
     emoji = next(
-        (
-            a["emoji"]
-            for a in get_avatars()
-            if a["niveau_min"] <= level <= a["niveau_max"]
-        ),
+        (a["emoji"] for a in get_avatars() if a["niveau_min"] <= lvl <= a["niveau_max"]),
         "🐣",
     )
+    next_xp = xp_to_next(lvl)
+    bar = progress_bar(xp, next_xp)
 
-    await ctx.send(
-        f"""
-📊 **Statistiques de {ctx.author.name}** :
-Niveau : {level} – {emoji} {titre}
-XP total : {xp}
-Défis réussis : {defis_reussis}
-Défis ratés : {defis_rates}
-"""
+    await inter.response.send_message(
+        f"**{inter.user.display_name}** – {emoji} {titre}\n"
+        f"Niveau {lvl} · {xp}/{next_xp} XP\n`{bar}`",
+        ephemeral=True,
+    )
+
+@bot.tree.command(name="citation", description="Un mot motivant du Professeur")
+async def slash_citation(inter: Interaction):
+    ensure_user_exists(inter.user.id, inter.user.display_name)
+    maj_derniere_activite(inter.user.id)
+    await inter.response.send_message(
+        get_random_citation_by_category("motivation"), ephemeral=True
+    )
+
+# ───────────────────────────────────────────────
+# Leaderboard hebdomadaire
+# ───────────────────────────────────────────────
+@bot.tree.command(name="classement", description="Top 10 des XP gagnés cette semaine")
+async def slash_classement(inter: Interaction):
+    leaderboard = build_leaderboard()
+    embed = discord.Embed(
+        title="🏆 Classement hebdomadaire", description=leaderboard, color=0xF1C40F
+    )
+    await inter.response.send_message(embed=embed)
+
+def build_leaderboard() -> str:
+    cutoff = datetime.utcnow() - timedelta(days=7)
+    users = get_all_users().values()
+    sorted_users = sorted(
+        users,
+        key=lambda u: u.get("weekly_xp", 0),
+        reverse=True,
+    )[:10]
+    lines = []
+    for i, u in enumerate(sorted_users, 1):
+        lines.append(f"**#{i}** {u['name']} – {u.get('weekly_xp', 0)} XP")
+    return "\n".join(lines) if lines else "Pas encore de participants."
+
+@tasks.loop(hours=24)
+async def leaderboard_task():
+    """Calcule l’XP gagné sur 7 jours glissants et reset les caches level-up toutes les 24 h."""
+    users = get_all_users()
+    for u in users.values():
+        # Weekly XP = différence entre xp actuel et xp de la semaine passée stocké en metadata
+        start_xp = u.setdefault("xp_snapshot", u["xp"])
+        u["weekly_xp"] = max(u["xp"] - start_xp, 0)
+    # Reset snapshot tous les lundi 00:00 UTC
+    if datetime.utcnow().weekday() == 0:
+        for u in users.values():
+            u["xp_snapshot"] = u["xp"]
+    _levelup_cache.clear()
+
+from utils import save_all_users
+users = get_all_users()
+save_all_users(users)
+
+
+# ───────────────────────────────────────────────
+# Lancement et pimpage du bot
+# ───────────────────────────────────────────────
+@bot.tree.command(name="oui", description="Confirme que tu as compris")
+async def slash_oui(inter: Interaction):
+    user = ensure_user_exists(inter.user.id, inter.user.display_name)
+    update_user_xp(user["id"], 5)  # +5 XP pour réussite
+
+    if inter.guild:
+        member = inter.guild.get_member(inter.user.id)
+        if member:
+            await give_badge(member, user["xp"])  # Donne badge si niveau atteint
+
+    await inter.response.send_message(
+        "✨ Parfait ! +5 XP pour ta détermination.", ephemeral=True
+    )
+
+@bot.tree.command(name="non", description="Indique que tu es bloqué")
+async def slash_non(inter: Interaction):
+    user = ensure_user_exists(inter.user.id, inter.user.display_name)
+    update_user_xp(user["id"], 2)  # +2 XP pour persévérance
+
+    if inter.guild:
+        member = inter.guild.get_member(inter.user.id)
+        if member:
+            await give_badge(member, user["xp"])
+
+    await inter.response.send_message(
+        "🔄 Pas de souci, reformule ta question et +2 XP pour ta persévérance !",
+        ephemeral=True
     )
 
 
-@bot.command(name="temps")
-async def temps(ctx):
-    user = get_user(ctx.author.id)
-    if not user or not user.get("derniere_activite"):
-        await ctx.send("Aucune activité détectée.")
-        return
-
-    maj_derniere_activite(ctx.author.id)
-    last_dt = datetime.fromisoformat(user["derniere_activite"])
-    diff = datetime.utcnow() - last_dt
-    jours, reste = diff.days, diff.seconds
-    heures, minutes = reste // 3600, (reste % 3600) // 60
-
-    await ctx.send(f"⏱️ Dernière activité il y a {jours}j {heures}h {minutes}min.")
-
-
-@bot.command(name="cours")
-async def cours(ctx):
-    user = ensure_user_exists(ctx.author.id, ctx.author.name)
-    maj_derniere_activite(ctx.author.id)
-    log_action(user["id"], "cours_demande")
-    cours = get_cours_for_level(user["level"])
-    if not cours:
-        await ctx.send("📚 Aucun cours disponible pour ton niveau.")
-        return
-
-    xp_msg = attribuer_xp(user["id"], "cours_suivi", niveau=user["level"])
-    sections = format_cours(cours)
-    await ctx.send(f"{xp_msg}\n" + "\n\n".join(sections))
-
-
-@bot.command(name="defi")
-async def defi(ctx):
-    user = ensure_user_exists(ctx.author.id, ctx.author.name)
-    maj_derniere_activite(ctx.author.id)
-    log_action(user["id"], "debut_defi")
-    defis = get_all_defis()
-    defi = choisir_defi(defis, user)
-
-    if not defi:
-        await ctx.send("🚫 Tu as déjà complété tous les défis de ton niveau !")
-        return
-
-    # Sauvegarder le défi en cours
-    bot.defi_en_cours[ctx.author.id] = defi
-
-    # Mettre à jour le dernier défi de l'utilisateur
+# ─ Rappel d'inactivité ─
+@tasks.loop(hours=12)
+async def inactivity_ping():
+    now = datetime.utcnow()
     users = get_all_users()
-    users[str(ctx.author.id)]["dernier_defi"] = defi["id"]
-    save_all_users(users)
+    for uid, u in users.items():
+        last = datetime.fromisoformat(u.get("derniere_activite", now.isoformat()))
+        if now - last > timedelta(hours=72):
+            user_obj = await bot.fetch_user(int(uid))
+            try:
+                await user_obj.send(
+                    "👋 Hé ! Ça fait trois jours sans pratiquer : une nouvelle question ?"
+                )
+            except discord.Forbidden:
+                pass
+            u["derniere_activite"] = now.isoformat()
+from utils import save_all_users
 
-    await ctx.send(
-    f"🧩 **Défi** :\n{defi['intitule']}\n✍️ Réponds avec `!repond <ta_reponse>`"
-)
+save_all_users(users)
+
+
+# ─ Analyse rapide de code collé ─
+@bot.tree.command(name="coach", description="Analyse ton code et donne des conseils")
+@app_commands.describe(code="Colle ton code Python ici")
+async def slash_coach(inter: Interaction, code: str):
+    await inter.response.defer(ephemeral=True)
+    critique = f"Ton code commence par {code.splitlines()[0][:30]}…\n"
+    if "print(" not in code:
+        critique += "• Pas de print : comment testes-tu ?\n"
+    if "while True" in code and "break" not in code:
+        critique += "• Boucle infinie repérée : pense à un break 😉\n"
+    await inter.followup.send(critique)
+
+
+# ─ Attribution de rôles badges ─
+BADGE_ROLES = {
+    100: "🥉 Débrouillard",
+    500: "🥈 Persévérant",
+    1000: "🥇 Inarrêtable",
+}
+
+async def give_badge(member: discord.Member, xp: int):
+    guild = member.guild
+    for thresh, role_name in BADGE_ROLES.items():
+        if xp >= thresh:
+            role = discord.utils.get(guild.roles, name=role_name)
+            if role and role not in member.roles:
+                await member.add_roles(role, reason="Nouveau badge XP")
+                try:
+                    await member.send(f"🏅 Tu gagnes le badge **{role_name}** !")
+                except discord.Forbidden:
+                    pass
+
+# Appelle cette fonction dans update_user_xp
+# après avoir mis à jour l'XP :
+#   member = guild.get_member(user_id)
+#   await give_badge(member, new_xp)
 
 
 
-@bot.command(name="repond")
-async def repond(ctx, *, reponse):
-    user = ensure_user_exists(ctx.author.id, ctx.author.name)
-    maj_derniere_activite(ctx.author.id)
+import pydoc
+@bot.tree.command(name="explain", description="Doc rapide d'un mot Python")
+@app_commands.describe(term="mot-clé ou fonction")
+async def slash_explain(inter: Interaction, term: str):
+    await inter.response.defer(ephemeral=True)
+    try:
+        info = pydoc.render_doc(term, "Help on %s")
+        await inter.followup.send(f"```{info[:1500]}```")
+    except:
+        await inter.followup.send("Rien trouvé.")
 
-    if ctx.author.id not in bot.defi_en_cours:
-        await ctx.send("🤔 Aucun défi en attente de réponse.")
-        return
+import discord
+from discord import ui, Interaction, ButtonStyle
 
-    defi = bot.defi_en_cours.pop(ctx.author.id)
+class ConfirmView(ui.View):
+    def __init__(self, challenge_title: str, user_id: int):
+        super().__init__(timeout=120)
+        self.challenge_title = challenge_title
+        self.user_id = user_id
 
-    # Vérifier la réponse (implémentation simple, à adapter selon tes besoins)
-    if reponse.strip().lower() == defi.get("solution", "").strip().lower():
-        # Défi réussi
-        users = get_all_users()
-        user_id = str(ctx.author.id)
-        if user_id in users:
-            if "defis_reussis" not in users[user_id]:
-                users[user_id]["defis_reussis"] = []
-            users[user_id]["defis_reussis"].append(defi["id"])
-            save_all_users(users)
+    @ui.button(label="✅ J'ai compris", style=ButtonStyle.success)
+    async def understood(self, interaction: Interaction, button: ui.Button):
+        # Noter que l'utilisateur a réussi le défi
+        track_completed_challenge(self.user_id, self.challenge_title, success=True)
+        update_user_xp(self.user_id, 10)  # Bonus XP pour réussite
 
-        xp_msg = attribuer_xp(user_id, "defi_reussi", niveau=user.get("level", 1))
-        await ctx.send(f"✅ Bravo ! Tu as réussi le défi !\n{xp_msg}")
-    else:
-        # Défi échoué
-        users = get_all_users()
-        user_id = str(ctx.author.id)
-        if user_id in users:
-            if "defis_rates" not in users[user_id]:
-                users[user_id]["defis_rates"] = []
-            users[user_id]["defis_rates"].append(defi["id"])
-            save_all_users(users)
+        await interaction.response.send_message(
+            "✨ Super ! Défi réussi (+10 XP). "
+            "Quand tu veux une nouvelle question, tape simplement `/prof`.",
+            ephemeral=True
+        )
 
-        xp_msg = attribuer_xp(user_id, "defi_echoue", niveau=user.get("level", 1))
-        await ctx.send(
-            f"❌ Dommage, ta réponse n'est pas correcte. La solution était : `{defi.get('solution', 'Solution non disponible')}`\n{xp_msg}"
+    @ui.button(label="❌ Bloqué", style=ButtonStyle.danger)
+    async def stuck(self, interaction: Interaction, button: ui.Button):
+        # Noter que l'utilisateur a échoué le défi
+        track_completed_challenge(self.user_id, self.challenge_title, success=False)
+        update_user_xp(self.user_id, 2)  # Petit XP pour l'effort
+
+        await interaction.response.send_message(
+            "🔄 Pas grave, l'erreur fait partie de l'apprentissage (+2 XP). "
+            "Repose une question avec `/prof` pour plus d'explications.",
+            ephemeral=True
         )
 
 
-@bot.command(name="qcm")
-async def qcm(ctx):
-    user = ensure_user_exists(ctx.author.id, ctx.author.name)
-    maj_derniere_activite(ctx.author.id)
-    log_action(user["id"], "qcm_lance")
-    qcm = choisir_qcm(user["level"])
+    @ui.button(label="🌀 Un autre exemple", style=ButtonStyle.primary)
+    async def more(self, interaction: Interaction, _button: ui.Button):
+        await interaction.response.send_message(
+            "Pas de souci ! Reformule ta demande avec `/prof …` et j'illustre autrement.",
+            ephemeral=True,
+        )
 
-    if not qcm:
-        await ctx.send("😓 Aucun QCM disponible pour ton niveau.")
+@bot.tree.command(name="creercours", description="Crée un mini-cours avec l'aide de l'IA.")
+@app_commands.describe(sujet="Le sujet du mini-cours que tu veux créer")
+async def slash_creercours(inter: Interaction, sujet: str):
+    await inter.response.defer()
+
+    cours = await creer_cours(sujet)
+    if not cours:
+        await inter.followup.send("❌ Impossible de créer le cours.")
         return
 
-    bot.qcm_en_cours[ctx.author.id] = qcm
-    question = f"❓ **{qcm['question']}**\n\nOptions : {', '.join(qcm['options'])}\nRéponds avec `!rep <ta_réponse>`"
-    await ctx.send(question)
+    # Enregistrement dans cours.json
+    try:
+        with open("cours.json", "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        data = {}
 
+    data[cours["title"]] = {
+        "description": cours["description"],
+        "niveau": cours["level"]
+    }
 
-@bot.command(name="rep")
-async def rep(ctx, *, reponse):
-    user = ensure_user_exists(ctx.author.id, ctx.author.name)
-    maj_derniere_activite(user["id"])
+    with open("cours.json", "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
 
-    if ctx.author.id not in bot.qcm_en_cours:
-        await ctx.send("🤔 Aucun QCM en attente de réponse.")
-        return
-
-    qcm = bot.qcm_en_cours.pop(ctx.author.id)
-    resultat = traiter_qcm(user["id"], qcm, reponse)
-    log_action(
-        user["id"], "qcm_repondu", {"question": qcm["question"], "reponse": reponse}
+    # Affichage sur Discord
+    embed = discord.Embed(
+        title=f"📚 Nouveau cours : {cours['title']}",
+        description=cours['description'],
+        color=0x3498DB,
     )
-    await ctx.send(resultat)
+    await inter.followup.send(embed=embed)
+
+# fin de bot.py
+import json
+with open("config.json") as f:
+    config = json.load(f)
+
+bot.run(config["TOKEN"])
 
 
-bot.run("MTM2MzkyNTk5MTAyNTgwNzQ3MQ.GTf9Xe.sFr0K2Dw0LOe0mk6lI_CG1QOj5LSjRDGiigVVs")

@@ -66,9 +66,12 @@ def create_user(user_id, user_name):
             "name": user_name,
             "xp": 0,
             "level": 1,
-            "defis_reussis": [],
-            "defis_rates": [],
-            "derniere_activite": None,
+            "history": {
+            "exercises": [],
+            "courses": [],
+            "qcm": []
+},
+        "derniere_activite": None
         }
         save_all_users(users)
         print(f"[✅] Utilisateur {user_name} créé avec succès.")
@@ -519,3 +522,147 @@ def get_all_defis():
     Charge tous les défis depuis le fichier DEFIS_FILE.
     """
     return load_json(DEFIS_FILE) or []
+
+def append_to_history(user_id, category, title):
+    users = get_all_users()
+    if str(user_id) not in users:
+        return
+
+    user = users[str(user_id)]
+    history = user.setdefault("history", {})
+    category_list = history.setdefault(category, [])
+
+    category_list.append({
+        "title": title,
+        "timestamp": datetime.utcnow().isoformat()
+    })
+
+    save_all_users(users)
+
+
+def append_exercise(user_id, exercise_title):
+    append_to_history(user_id, "exercises", exercise_title)
+
+
+def append_course(user_id, course_title):
+    append_to_history(user_id, "courses", course_title)
+
+
+def append_qcm(user_id, qcm_title):
+    append_to_history(user_id, "qcm", qcm_title)
+
+
+def get_recent_history(user_id, category, days=7):
+    users = get_all_users()
+    if str(user_id) not in users:
+        return []
+
+    history = users[str(user_id)].get("history", {})
+    category_list = history.get(category, [])
+    cutoff = datetime.utcnow() - timedelta(days=days)
+
+    return [entry["title"] for entry in category_list if datetime.fromisoformat(entry["timestamp"]) > cutoff]
+
+import json
+
+def get_user_level_info(level):
+    with open("levels.json", "r") as f:
+        levels = json.load(f)
+    for lvl in levels:
+        if lvl["niveau"] == level:
+            return lvl["titre"]
+    return "🐣 Inconnu"
+
+def track_completed_challenge(user_id, challenge_title, success=True):
+    """Enregistre qu'un défi a été complété avec succès ou non"""
+    users = get_all_users()
+    uid = str(user_id)
+    user = users.get(uid)
+    if not user:
+        return
+        
+    # Initialiser la structure si elle n'existe pas
+    if "completed_challenges" not in user:
+        user["completed_challenges"] = []
+        
+    # Ajouter le défi avec son résultat et horodatage
+    user["completed_challenges"].append({
+        "title": challenge_title,
+        "success": success,
+        "timestamp": datetime.utcnow().isoformat(),
+        "level_when_completed": user["level"]
+    })
+    
+    save_all_users(users)
+
+def get_appropriate_challenge_level(user_id):
+    """Détermine le niveau approprié du défi en fonction des performances passées"""
+    user = get_user(str(user_id))
+    if not user:
+        return 1
+        
+    base_level = user["level"]
+    
+    # Vérifier les performances récentes (derniers 5 défis)
+    challenges = user.get("completed_challenges", [])[-5:]
+    if not challenges:
+        return base_level
+        
+    success_rate = sum(1 for c in challenges if c["success"]) / max(1, len(challenges))
+    
+    # Ajuster le niveau selon la performance
+    if success_rate > 0.8:  # Plus de 80% de réussite
+        return base_level + 1  # Proposer un défi du niveau supérieur
+    elif success_rate < 0.3 and base_level > 1:  # Moins de 30% de réussite
+        return max(1, base_level - 1)  # Revenir au niveau inférieur
+        
+    return base_level  # Rester au même niveau
+
+def track_course_completion(user_id, course_title, completion_percentage):
+    """Enregistre la progression dans un cours"""
+    users = get_all_users()
+    uid = str(user_id)
+    user = users.get(uid)
+    if not user:
+        return
+        
+    courses = user.setdefault("courses_progress", {})
+    
+    # Mettre à jour seulement si meilleur score
+    if course_title in courses:
+        courses[course_title] = max(courses[course_title], completion_percentage)
+    else:
+        courses[course_title] = completion_percentage
+        
+    save_all_users(users)
+
+def get_recommended_course(user_id):
+    """Recommande un cours basé sur l'analyse des échecs dans les défis et QCM"""
+    user = get_user(str(user_id))
+    if not user:
+        return None
+    
+    # Obtenir tous les cours disponibles pour son niveau
+    cours_niveau = get_cours_for_level(user["level"])
+    if not cours_niveau:
+        return None
+        
+    # Si l'utilisateur est nouveau, recommander le cours de base
+    if "completed_challenges" not in user or not user["completed_challenges"]:
+        return cours_niveau
+    
+    # Analyser les défis échoués récemment
+    failed_challenges = [
+        c for c in user.get("completed_challenges", [])
+        if not c.get("success", False) and 
+        (datetime.utcnow() - datetime.fromisoformat(c["timestamp"])).days < 14
+    ]
+    
+    # Si pas de défis échoués récents, recommander selon le niveau
+    if not failed_challenges:
+        return cours_niveau
+        
+    # Logique simplifiée pour recommander un cours
+    # En réalité, vous pourriez analyser les titres des défis échoués
+    # pour déterminer le thème où l'utilisateur a des difficultés
+    return cours_niveau
