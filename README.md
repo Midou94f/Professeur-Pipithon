@@ -1,4 +1,4 @@
-# 🤖 Professeur Pipithon  
+# Professeur Pipithon  
 ### Un professeur Python intelligent, interactif, avec intégration IA & Bot Discord  
 *(Toutes les clés API et tokens ont été volontairement supprimés du dépôt pour des raisons de sécurité.)*
 
