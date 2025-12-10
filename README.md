@@ -1,164 +1,162 @@
-# BOT Discord – Apprentissage gamifié de Python
-
-_Auteurs : Mehdi Fehri, Emile Zeller, Hugo Schneider_
-
----
-
-## 📚 Présentation du projet
-
-Bienvenue sur notre projet !  
-Nous avons conçu un bot Discord destiné à accompagner l'apprentissage du langage Python de manière ludique et motivante.  
-Le bot agit comme un mentor virtuel : il propose des défis, génère des cours personnalisés et récompense les progrès des utilisateurs par des points d'expérience (XP) et des niveaux.
-
-Notre ambition est de transformer l'étude du Python en une expérience dynamique, progressive et adaptée au rythme de chacun.
+# 🤖 Professeur Pipithon  
+### Un professeur Python intelligent, interactif, avec intégration IA & Bot Discord  
+*(Toutes les clés API et tokens ont été volontairement supprimés du dépôt pour des raisons de sécurité.)*
 
 ---
 
-## ❓ Pourquoi ce projet ?
+## 1. Présentation générale du projet
 
-Apprendre un langage de programmation peut parfois sembler monotone ou difficile.  
-Nous avons voulu introduire des mécaniques de gamification inspirées des jeux vidéo :  
-- Progression par XP,
-- Titres et niveaux motivants,
-- Suivi personnalisé,
-- Défis adaptés au niveau de chacun.
+**Professeur Pipithon** est un assistant pédagogique conçu pour apprendre Python de manière simple, progressive et interactive.  
+Le projet combine trois composantes :
 
-Le bot vise à maintenir l'intérêt des utilisateurs sur le long terme, tout en renforçant leurs compétences en Python à travers des interactions régulières et ciblées.
+1. **Un moteur pédagogique local** (explications, quiz, corrections)  
+2. **Une intégration IA (API OpenAI ou équivalent)** pour enrichir les réponses  
+3. **Un bot Discord** permettant d’utiliser le professeur dans un serveur Discord
 
----
+L’objectif : rendre l’apprentissage du code **accessible**, **dynamique** et **conversationnel**.
 
-## 🚀 Fonctionnalités principales
-
-Notre bot propose :
-
-- **Défis automatiques** : des exercices pratiques adaptés au niveau de l'utilisateur, générés par l'IA.
-- **Génération de mini-cours personnalisés** : explication claire d'un concept Python avec exemple et défi associé.
-- **Suivi de la progression** : accumulation d'XP, montée en niveaux, historique des exercices réalisés.
-- **Gamification** : titres motivants, classement entre utilisateurs, badges spéciaux pour récompenser l'assiduité.
-- **Citations inspirantes** : pour maintenir la motivation des apprenants.
-- **Relances en cas d'inactivité** : le bot rappelle les utilisateurs au bout de 72 heures sans activité.
-
-Chaque interaction est conçue pour être engageante, adaptée et enrichissante.
+Toutes les clés d’accès API (OpenAI) et les tokens Discord ont été **retirés volontairement** avant mise en ligne afin de sécuriser l’environnement.
 
 ---
 
-## 🔧 Installation et configuration
+## 2. Intégration de l’IA (OpenAI)
 
-### Prérequis
-- Python 3.9 ou supérieur
-- Un compte Discord et un serveur où installer le bot
-- Un compte OpenAI (clé API nécessaire pour l'utilisation de GPT-3.5)
+Le projet incorpore une couche d’intelligence artificielle permettant :
 
-### Étapes d'installation
+- la génération d’explications personnalisées  
+- l’analyse d’erreurs de code  
+- la création dynamique de quiz  
+- l’adaptation du niveau selon l’utilisateur  
 
-1. Clonez ce dépôt :
-   ```bash
-   git clone https://github.com/votre-utilisateur/votre-depot.git
-   cd votre-depot
-   ```
+### Exemple simplifié d’appel IA (clés supprimées)
 
-2. Installez les dépendances nécessaires :
-   ```bash
-   pip install -r requirements.txt
-   ```
+```python
+from openai import OpenAI
 
-3. Configurez le fichier `config.json` :
-   ```json
-   {
-     "GPTKEY": "votre_clé_OpenAI",
-     "GPT_MODEL": "gpt-3.5-turbo",
-     "DISCORD_TOKEN": "votre_token_discord",
-     "GUILD_ID": "id_de_votre_serveur"
-   }
-   ```
+client = OpenAI(api_key="VOTRE_CLE_API_ICI")
 
-4. Lancez le bot :
-   ```bash
-   python bot.py
-   ```
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": "Tu es un professeur Python bienveillant."},
+        {"role": "user", "content": "Peux-tu m'expliquer ce qu'est une variable ?"}
+    ]
+)
+print(response.choices[0].message["content"])
+Dans le dépôt, toutes les clés d’API ont été remplacées par des variables vides ou par des placeholders.
 
-Le bot sera alors actif sur votre serveur Discord, prêt à interagir avec les utilisateurs !
+3. Bot Discord intégré
+Le projet inclut la possibilité de faire fonctionner Professeur Pipithon directement dans un serveur Discord.
 
----
+Fonctionnalités du bot :
 
-## ⚙️ Comment fonctionne le bot ?
+répondre aux questions Python en temps réel
 
-Dès qu'un utilisateur interagit avec le bot via les commandes `/prof`, `/cours`, `/défi`, etc., le bot :
+proposer des quiz dans un salon Discord
 
-- Analyse son profil (niveau, XP, historique).
-- Génère une réponse personnalisée via OpenAI.
-- Attribue de l'XP en fonction de la réussite.
-- Met à jour les données utilisateurs stockées dans des fichiers JSON (`users.json`, `logs.json`, etc.).
-- Propose de nouveaux contenus adaptés au niveau de l'utilisateur.
+analyser les réponses de l’utilisateur
 
-Chaque action est asynchrone pour garantir une réponse rapide, sans bloquer les autres utilisateurs.
+reformuler / corriger / expliquer via l’IA intégrée
 
----
+supporter Markdown dans les messages
 
-## Architecture
+Exemple simplifié (token supprimé)
+python
+Copier le code
+import discord
 
-| Composant  | Rôle | Détails |
-|------------|------|---------|
-| `bot.py`   | Interface Discord | Commandes, gestion XP, classement, tâches périodiques. |
-| `ai.py`    | Génération IA | Création de cours/QCM personnalisés via OpenAI. |
-| `utils.py` | Persistance JSON | Gestion des utilisateurs, XP, historique et sélection adaptative des défis. |
-| `*.json`   | Base de données | Utilisateurs, niveaux, cours, citations, règles d'XP. |
+client = discord.Client(intents=discord.Intents.all())
 
-Architecture pensée pour être **modulaire, robuste** et **évolutive**.
+@client.event
+async def on_message(message):
+    if message.author.bot:
+        return
 
----
+    if message.content.startswith("!python"):
+        question = message.content.replace("!python", "")
+        reponse = professeur.repond(question)
+        await message.channel.send(reponse)
 
-## 📈 Progression et niveaux
+client.run("DISCORD_TOKEN_ICI")  # Token supprimé dans le dépôt
+Le token Discord a été volontairement supprimé du code public.
 
-Chaque action réalisée (suivre un cours, réussir un défi, répondre à un QCM) rapporte de l'XP.  
-Lorsque l'utilisateur atteint un certain seuil d'XP, il passe au niveau supérieur et reçoit un nouveau titre motivant.
+4. Structure du dépôt
 
-Exemple de palier :
-```json
-{ "niveau": 10, "xp": 250, "titre": "🔥 Initié des Boucles" }
-```
+5. Fonctionnement du professeur
 
-L'évolution est conçue pour maintenir l'intérêt et encourager l'apprentissage régulier.
+Le script principal enseigne la programmation Python via :
 
----
+explications claires
 
-## 💪 Points forts
+exemples concrets
 
-- **Mémoire individuelle complète** : XP, niveaux et historique sont conservés pour chaque utilisateur.
-- **Adaptation intelligente** : la difficulté des défis est ajustée selon les performances récentes.
-- **Architecture modulaire** : le code est propre, séparé par responsabilités (commandes, IA, gestion de données).
-- **Approche ludique** : progression gratifiante, leaderboards et badges motivants.
+quiz automatiques
 
----
+corrections détaillées
 
-## ⚠️ Limites connues
+logique pédagogique adaptative
 
-- Dépendance à l'API OpenAI (limites de quota, coût éventuel).
-- Stockage en fichiers JSON (limité pour un nombre très élevé d'utilisateurs).
-- Gestion d'erreurs partielle sur certaines commandes.
-- Bot actuellement uniquement en français.
-- Disponible uniquement via Discord (pas encore d'API Web publique).
+Le professeur peut être utilisé :
 
----
+✔ en local (terminal)
+✔ dans un salon Discord
+✔ avec ou sans IA (mode dégradé)
 
-## 🔭 Perspectives d'évolution
+6. Sécurité & confidentialité
+Afin de rendre le projet public, toutes les informations sensibles ont été supprimées :
 
-- Développement d'une interface Web complémentaire.
-- Migration vers une base de données plus robuste (ex. SQLite, PostgreSQL).
-- Enrichissement des cours et défis générés.
-- Ajout d'un système de récompenses spéciales et de mini-jeux éducatifs.
+❌ clé API OpenAI
 
----
+❌ token Discord
 
-## 🤝 Contribuer
+❌ variables d’environnement privées
 
-Les contributions sont les bienvenues !  
-N'hésitez pas à ouvrir une issue pour signaler un bug ou proposer une amélioration, ou à soumettre une pull request.
+Le README explique leur usage, mais aucune donnée confidentielle n’est stockée dans le dépôt.
 
----
+7. Installation & exécution locale
+bash
+Copier le code
+git clone https://github.com/Midou94f/Professeur-Pipithon
+cd Professeur-Pipithon
+python professeur_pipithon.py
+Pour activer l’IA, ajouter une variable d’environnement :
 
-## 📬 Contact
+bash
+Copier le code
+export OPENAI_API_KEY="votre_clé"
 
-Pour toute question ou suggestion, veuillez nous contacter via GitHub.
+8. Exécuter le bot Discord
+Créer un bot via https://discord.com/developers
 
----
+Insérer votre token dans bot_discord.py
+
+Installer les dépendances :
+
+bash
+Copier le code
+pip install discord.py openai python-dotenv
+Lancer le bot :
+
+bash
+Copier le code
+python bot_discord.py
+
+9. Roadmap (améliorations prévues)
+
+ Version Web (Streamlit / FastAPI)
+
+ Gestion des profils élèves
+
+ Suivi de progression
+
+ Mode “mini-projet” (TP guidés)
+
+ Système de badges pédagogiques
+
+ Mémoire longue sur Discord
+
+10. Licence
+Licence MIT.
+
+11. Auteur
+Projet développé par Mehdi Fehri, Emile Zeller et Hugo Scheinder dans le cadre de leur master en statistiques et data science, pour rendre l’apprentissage Python plus intuitif, moderne et accessible.
